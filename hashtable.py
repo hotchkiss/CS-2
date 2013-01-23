@@ -4,6 +4,7 @@ language: python3
 author: sps@cs.rit.edu Sean Strout 
 author: jeh@cs.rit.edu James Heliotis 
 author: anh@cs.rit.edu Arthur Nunes-Harwitt
+author: hotchkiss@rit.edu Collin Hotchkiss
 description: open addressing Hash Table for CS 242 Lecture
 """
 
@@ -34,13 +35,16 @@ class HashTable( object ):
         """
         result = ""
         for i in range( len( self.table ) ):
-            result += str( i ) + ": "
-            result += str( self.table[i] ) + str( self.table[])"\n"
+            for n in range( len( self.table[ i ] ):
+                result += str( i ) + ", " + str( n )": "
+                result += str( self.table[ i ][ n ][ 0 ] ) + str( self.table[ i ][ n ][ 1 ] )"\n"
         return result
 
     class _Entry( object ):
         """
            A nested class used to hold key/value pairs.
+           
+           NEW IMPLEMENTATION DOES NOT USE THIS
         """
 
         __slots__ = ( "key", "value" )
@@ -73,15 +77,14 @@ def keys( hTable ):
 
 def contains( hTable, key ):
     """
-       Return True iff hTable has an entry with the given key.
+       Return True if hTable has an entry with the given key.
     """
     index = hash_function( key, len( hTable.table ) )
-    startIndex = index # We must make sure we don't go in circles.
-    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
-        index = ( index + 1 ) % len( hTable.table )
-        if index == startIndex:
-            return False
-    return hTable.table[ index ] != None
+    for item in hTable.table[ index ]:
+        for n in range( len( item ) ):
+            if item[ n ] == key:
+                return True
+    return False
 
 def put( hTable, key, value ):
     """
@@ -91,17 +94,15 @@ def put( hTable, key, value ):
        If the table is full, an Exception is raised.
     """
     index = hash_function( key, len( hTable.table ) )
-    if hTable.table[ index ] == None:
+    if hTable.table[ index ] == [ ]:
         #If the hash table's index of key's hash is empty, make
         hTable.table[ index ][ 0 ] = [ key, value ]
-    if hTable.table[ index ] != None:
+    if hTable.table[ index ] != [ ]:
         for item in hTable.table[ index ]:
             if item[ 0 ] == key:
                 item[ 1 ] = value
-                hTable.size += 1
                 return True
-    
-    return True
+        hTable.table[ index ][ len( hTable.table[ index ] ) ] = [ key, value ]
 
 def get( hTable, key ):
     """
