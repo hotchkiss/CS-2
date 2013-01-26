@@ -1,0 +1,2 @@
+1: original hash function: 0.056612841214917387 / 438.72
+2. new hash function: 

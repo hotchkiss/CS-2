@@ -10,7 +10,7 @@ author: hotchkiss@rit.edu Collin Hotchkiss
 
 # import the functions needed from the hashtable.py module.
 
-from hashtable import HashTable, get, keys, put, contains
+from hashtable import HashTable, get, keys, put, contains, imbalance
 
 
 def word_count( hTable, filename ):
@@ -91,7 +91,7 @@ def main():
 
     wordTable = word_count( hTable, filename )
     printSummary( wordTable )
-
+    print( "Average chain length: " + str( imbalance( wordTable ) ) )
     while True:
 
         print( "Commands: k[ey] <word> f[ind] <word> q[uit] ? ", end=" " )

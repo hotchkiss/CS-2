@@ -59,7 +59,7 @@ def hash_function( val, n ):
     """
     #hashcode = ( len( val ) % n )
     num = len( val )
-    hashcode = ( num * ( num + 7 ) ) % n
+    hashcode = ( ( num + 23 ) * ( num + 29 ) ) % n
     return hashcode
 
 def keys( hTable ):
