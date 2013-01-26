@@ -24,6 +24,8 @@ class HashTable( object ):
            The capacity parameter determines its initial size.
         """
         self.table = [ None ] * capacity
+        for i in range( capacity ):
+            self.table[ i ] = []
         self.size = 0
 
     def __str__( self ):
@@ -90,16 +92,15 @@ def put( hTable, key, value ):
        If the table is full, an Exception is raised.
     """
     index = hash_function( key, len( hTable.table ) )
-    startIndex = index # We must make sure we don't go in circles.
-    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
-        index = ( index + 1 ) % len( hTable.table )
-        if index == startIndex:
-            raise Exception( "Hash table is full." )
-    if hTable.table[ index ] == None:
-        hTable.table[ index ] = HashTable._Entry( key, value )
+    if hTable.table[ index ] == []:
+        hTable.table[ index ] = [ HashTable._Entry( key, value ) ]
         hTable.size += 1
     else:
-        hTable.table[ index ].value = value
+        for i in range( len( hTable.table[ index ] ) ):
+            if hTable.table[ index ][ i ].key == key:
+                hTable.table[ index ][ i ].value = value
+                return True
+        hTable.table[ index ].append( HashTable._Entry( key, value ) )
     return True
 
 def get( hTable, key ):
