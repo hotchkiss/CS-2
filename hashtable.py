@@ -111,14 +111,10 @@ def get( hTable, key ):
        Precondition: contains(hTable, key)
     """
     index = hash_function( key, len( hTable.table ) )
-    startIndex = index # We must make sure we don't go in circles.
-    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
-        index = ( index + 1 ) % len( hTable.table )
-        if index == startIndex:
-            raise Exception( "Hash table does not contain key." )
-    if hTable.table[ index ] == None:
+    if hTable.table[ index ] == [ ]:
         raise Exception( "Hash table does not contain key." )
     else:
-        return hTable.table[ index ].value
-
-
+        for item in hTable.table[ index ]:
+            if item[ 0 ] == key:
+                return item[ 1 ]
+        raise Exception( "Hash table does not contain key." )
