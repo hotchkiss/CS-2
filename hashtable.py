@@ -118,3 +118,20 @@ def get( hTable, key ):
             if i.key == key:
                 return i.value
         raise Exception( "Hash table does not contain key." )
+
+def imbalance( hTable ):
+    """
+        Compute average length of all non-empty chains
+        preconditions: none
+    """
+    numOfChains = 0
+    sum = 0
+    for i in range( len( hTable.table ) ):
+        if hTable.table[ i ] != []:
+            sum += len( hTable.table[ i ] )
+            #print( sum )
+            numOfChains += 1
+            #print( numOfChains )
+            #print( len( hTable.table[ i ] ) )
+    avg =  sum / numOfChains
+    return ( avg - 1 )
