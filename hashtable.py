@@ -57,9 +57,9 @@ def hash_function( val, n ):
     """
        Compute a hash of the val string that is in [0 ... n).
     """
-    hashcode = hash( val ) % n
-    # hashcode = 0
-    # hashcode = len(val) % n
+    #hashcode = ( len( val ) % n )
+    num = len( val )
+    hashcode = ( num * ( num + 7 ) ) % n
     return hashcode
 
 def keys( hTable ):
