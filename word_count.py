@@ -5,6 +5,7 @@ language: python3
 author: sps@cs.rit.edu Sean Strout
 author: jeh@cs.rit.edu James Heliotis 
 author: bks@cs.rit.edu ben k steele
+author: hotchkiss@rit.edu Collin Hotchkiss
 """
 
 # import the functions needed from the hashtable.py module.
@@ -123,4 +124,3 @@ def main():
 
 # run the main program
 main()
-

@@ -24,8 +24,6 @@ class HashTable( object ):
            The capacity parameter determines its initial size.
         """
         self.table = [ None ] * capacity
-        for i in range( 0, capacity ):
-            self.table[ i ] = []
         self.size = 0
 
     def __str__( self ):
@@ -35,16 +33,13 @@ class HashTable( object ):
         """
         result = ""
         for i in range( len( self.table ) ):
-            for n in range( len( self.table[ i ] ):
-                result += str( i ) + ", " + str( n )": "
-                result += str( self.table[ i ][ n ][ 0 ] ) + str( self.table[ i ][ n ][ 1 ] )"\n"
+            result += str( i ) + ": "
+            result += str( self.table[i] ) + "\n"
         return result
 
     class _Entry( object ):
         """
            A nested class used to hold key/value pairs.
-           
-           NEW IMPLEMENTATION DOES NOT USE THIS
         """
 
         __slots__ = ( "key", "value" )
@@ -77,14 +72,15 @@ def keys( hTable ):
 
 def contains( hTable, key ):
     """
-       Return True if hTable has an entry with the given key.
+       Return True iff hTable has an entry with the given key.
     """
     index = hash_function( key, len( hTable.table ) )
-    for item in hTable.table[ index ]:
-        for n in range( len( item ) ):
-            if item[ n ] == key:
-                return True
-    return False
+    startIndex = index # We must make sure we don't go in circles.
+    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
+        index = ( index + 1 ) % len( hTable.table )
+        if index == startIndex:
+            return False
+    return hTable.table[ index ] != None
 
 def put( hTable, key, value ):
     """
@@ -94,15 +90,17 @@ def put( hTable, key, value ):
        If the table is full, an Exception is raised.
     """
     index = hash_function( key, len( hTable.table ) )
-    if hTable.table[ index ] == [ ]:
-        #If the hash table's index of key's hash is empty, make
-        hTable.table[ index ][ 0 ] = [ key, value ]
-    if hTable.table[ index ] != [ ]:
-        for item in hTable.table[ index ]:
-            if item[ 0 ] == key:
-                item[ 1 ] = value
-                return True
-        hTable.table[ index ][ len( hTable.table[ index ] ) ] = [ key, value ]
+    startIndex = index # We must make sure we don't go in circles.
+    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
+        index = ( index + 1 ) % len( hTable.table )
+        if index == startIndex:
+            raise Exception( "Hash table is full." )
+    if hTable.table[ index ] == None:
+        hTable.table[ index ] = HashTable._Entry( key, value )
+        hTable.size += 1
+    else:
+        hTable.table[ index ].value = value
+    return True
 
 def get( hTable, key ):
     """
@@ -120,5 +118,3 @@ def get( hTable, key ):
         raise Exception( "Hash table does not contain key." )
     else:
         return hTable.table[ index ].value
-
-
