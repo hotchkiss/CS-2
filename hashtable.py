@@ -24,7 +24,7 @@ class HashTable( object ):
            The capacity parameter determines its initial size.
         """
         self.table = [ None ] * capacity
-        for i in range( 0, capacity ):
+        for i in range( len( self.table ) ):
             self.table[ i ] = []
         self.size = 0
 
@@ -35,9 +35,9 @@ class HashTable( object ):
         """
         result = ""
         for i in range( len( self.table ) ):
-            for n in range( len( self.table[ i ] ):
-                result += str( i ) + ", " + str( n )": "
-                result += str( self.table[ i ][ n ][ 0 ] ) + str( self.table[ i ][ n ][ 1 ] )"\n"
+            for n in range( len( self.table[ i ] ) ):
+                result += str( i ) + ", " + str( n ) + ": "
+                result += str( self.table[ i ][ n ][ 0 ] ) + str( self.table[ i ][ n ][ 1 ] ) + "\n"
         return result
 
     class _Entry( object ):
@@ -70,9 +70,11 @@ def keys( hTable ):
        Return a list of keys in the given hashTable.
     """
     result = []
-    for entry in hTable.table:
-        if entry != None:
-            result.append( entry.key )
+    for item in range( len( hTable.table ) ):
+        if len( hTable.table[ item ]) != None:
+            for n in hTable.table[ item ]:
+                result.append( n )
+            #result.append( entry.key )
     return result
 
 def contains( hTable, key ):
@@ -96,13 +98,13 @@ def put( hTable, key, value ):
     index = hash_function( key, len( hTable.table ) )
     if hTable.table[ index ] == [ ]:
         #If the hash table's index of key's hash is empty, make
-        hTable.table[ index ][ 0 ] = [ key, value ]
+        hTable.table[ index ].append( [ key, value ] )
     if hTable.table[ index ] != [ ]:
         for item in hTable.table[ index ]:
             if item[ 0 ] == key:
                 item[ 1 ] = value
                 return True
-        hTable.table[ index ][ len( hTable.table[ index ] ) ] = [ key, value ]
+        hTable.table[ index ].append( [ key, value ] )
 
 def get( hTable, key ):
     """
