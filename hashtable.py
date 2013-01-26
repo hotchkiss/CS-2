@@ -67,9 +67,10 @@ def keys( hTable ):
        Return a list of keys in the given hashTable.
     """
     result = []
-    for entry in hTable.table:
-        if entry != None:
-            result.append( entry.key )
+    for item in hTable.table:
+        if item != []:
+            for entry in item:
+                result.append( entry.key )
     return result
 
 def contains( hTable, key ):
@@ -77,12 +78,11 @@ def contains( hTable, key ):
        Return True iff hTable has an entry with the given key.
     """
     index = hash_function( key, len( hTable.table ) )
-    startIndex = index # We must make sure we don't go in circles.
-    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
-        index = ( index + 1 ) % len( hTable.table )
-        if index == startIndex:
-            return False
-    return hTable.table[ index ] != None
+    lst = hTable.table[ index ]
+    for i in lst:
+        if i.key == key:
+            return True
+    return False
 
 def put( hTable, key, value ):
     """
@@ -110,12 +110,11 @@ def get( hTable, key ):
        Precondition: contains(hTable, key)
     """
     index = hash_function( key, len( hTable.table ) )
-    startIndex = index # We must make sure we don't go in circles.
-    while hTable.table[ index ] != None and hTable.table[ index ].key != key:
-        index = ( index + 1 ) % len( hTable.table )
-        if index == startIndex:
-            raise Exception( "Hash table does not contain key." )
-    if hTable.table[ index ] == None:
+    if hTable.table[ index ] == []:
         raise Exception( "Hash table does not contain key." )
     else:
-        return hTable.table[ index ].value
+        lst = hTable.table[ index ]
+        for i in lst:
+            if i.key == key:
+                return i.value
+        raise Exception( "Hash table does not contain key." )
