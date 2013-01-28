@@ -1,12 +1,13 @@
-""" 
+"""
 file: hashtable.py
 language: python3
-author: sps@cs.rit.edu Sean Strout 
-author: jeh@cs.rit.edu James Heliotis 
+author: sps@cs.rit.edu Sean Strout
+author: jeh@cs.rit.edu James Heliotis
 author: anh@cs.rit.edu Arthur Nunes-Harwitt
 author: hotchkiss@rit.edu Collin Hotchkiss
 description: open addressing Hash Table for CS 242 Lecture
 """
+import copy
 
 class HashTable( object ):
     """
@@ -15,19 +16,17 @@ class HashTable( object ):
        No two values may have the same key, but more than one
        key may have the same value.
     """
-
+    
     __slots__ = ( "table", "size" )
-
+    
     def __init__( self, capacity=89 ):
         """
            Create a hash table.
            The capacity parameter determines its initial size.
         """
-        self.table = [ None ] * capacity
-        for i in range( capacity ):
-            self.table[ i ] = []
+        self.table = [ [] for _ in range( capacity ) ]
         self.size = 0
-
+    
     def __str__( self ):
         """
            Return the entire contents of this hash table,
@@ -38,18 +37,18 @@ class HashTable( object ):
             result += str( i ) + ": "
             result += str( self.table[i] ) + "\n"
         return result
-
+    
     class _Entry( object ):
         """
            A nested class used to hold key/value pairs.
         """
-
+        
         __slots__ = ( "key", "value" )
-
+        
         def __init__( self, entryKey, entryValue ):
             self.key = entryKey
             self.value = entryValue
-
+        
         def __str__( self ):
             return "(" + str( self.key ) + ", " + str( self.value ) + ")"
 
@@ -93,9 +92,11 @@ def put( hTable, key, value ):
        If the table is full, an Exception is raised.
     """
     ratio = load( hTable )
+    print( ratio )
     if ratio >= .75:
         hTable = rehash( hTable )
-    index = hash_function( key, len( hTable.table ) )
+    newN = len( hTable.table )
+    index = hash_function( key, newN )
     if hTable.table[ index ] == []:
         hTable.table[ index ] = [ HashTable._Entry( key, value ) ]
         hTable.size += 1
@@ -105,6 +106,7 @@ def put( hTable, key, value ):
                 hTable.table[ index ][ i ].value = value
                 return True
         hTable.table[ index ].append( HashTable._Entry( key, value ) )
+        hTable.size += 1
     return True
 
 def get( hTable, key ):
@@ -155,8 +157,12 @@ def rehash( hTable ):
     newN = ( 2 * len( hTable.table ) ) + 1
     print( "New capacity: " + str( newN ) )
     newTable = HashTable( newN )
+    print( newTable.__str__() )
     for i in range( len( hTable.table ) ):
         for item in hTable.table[ i ]:
             index = hash_function( item.key, newN )
             newTable.table[ index ] = [ HashTable._Entry( item.key, item.value ) ]
-    hTable = newTable
+    hTable = HashTable( newN )
+    print( newTable.__str__( ) )
+    for n in range( len( newTable.table ) ):
+        hTable.table[ n ] = newTable.table[ n ]
