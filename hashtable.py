@@ -92,9 +92,11 @@ def put( hTable, key, value ):
        If the table is full, an Exception is raised.
     """
     ratio = load( hTable )
-    print( ratio )
+    #print( ratio )
     if ratio >= .75:
-        hTable = rehash( hTable )
+        newTable = rehash( hTable )
+        hTable.table = copy.deepcopy( newTable.table )
+        hTable.size = newTable.size
     newN = len( hTable.table )
     index = hash_function( key, newN )
     if hTable.table[ index ] == []:
@@ -154,15 +156,14 @@ def rehash( hTable ):
     """
         Performs a rehash every time the table starts to fill up.
     """
-    newN = ( 2 * len( hTable.table ) ) + 1
-    print( "New capacity: " + str( newN ) )
+    newN = ( ( 2 * len( hTable.table ) ) + 1 )
+    #print( "New capacity: " + str( newN ) )
     newTable = HashTable( newN )
-    print( newTable.__str__() )
     for i in range( len( hTable.table ) ):
         for item in hTable.table[ i ]:
             index = hash_function( item.key, newN )
             newTable.table[ index ] = [ HashTable._Entry( item.key, item.value ) ]
-    hTable = HashTable( newN )
-    print( newTable.__str__( ) )
-    for n in range( len( newTable.table ) ):
-        hTable.table[ n ] = newTable.table[ n ]
+    return newTable
+    #hTable = HashTable( newN )
+    #for n in range( len( newTable.table ) ):
+    #    hTable.table[ n ] = copy.deepcopy( newTable.table[ n ] )
