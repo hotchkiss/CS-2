@@ -18,7 +18,7 @@ class HashTable( object ):
 
     __slots__ = ( "table", "size" )
 
-    def __init__( self, capacity=100 ):
+    def __init__( self, capacity=89 ):
         """
            Create a hash table.
            The capacity parameter determines its initial size.
@@ -58,8 +58,9 @@ def hash_function( val, n ):
        Compute a hash of the val string that is in [0 ... n).
     """
     #hashcode = ( len( val ) % n )
-    num = len( val )
-    hashcode = ( ( num + 23 ) * ( num + 29 ) ) % n
+    hashcode = 0
+    for i in range( len( val ) ):
+        hashcode = (71 * hashcode + ord( val[ i ] ) ) % n
     return hashcode
 
 def keys( hTable ):
@@ -91,6 +92,9 @@ def put( hTable, key, value ):
        will replace the previous one already in the table.
        If the table is full, an Exception is raised.
     """
+    ratio = load( hTable )
+    if ratio >= .75:
+        hTable = rehash( hTable )
     index = hash_function( key, len( hTable.table ) )
     if hTable.table[ index ] == []:
         hTable.table[ index ] = [ HashTable._Entry( key, value ) ]
@@ -129,9 +133,30 @@ def imbalance( hTable ):
     for i in range( len( hTable.table ) ):
         if hTable.table[ i ] != []:
             sum += len( hTable.table[ i ] )
-            #print( sum )
             numOfChains += 1
-            #print( numOfChains )
-            #print( len( hTable.table[ i ] ) )
+    print( str( sum ) + ", " + str( numOfChains ) )
     avg =  sum / numOfChains
     return ( avg - 1 )
+
+def load( hTable ):
+    """
+        Checks ratio of items in table to table size
+    """
+    sum = 0
+    size = len( hTable.table )
+    for i in range( size ):
+        sum += len( hTable.table[ i ] )
+    return sum / size
+
+def rehash( hTable ):
+    """
+        Performs a rehash every time the table starts to fill up.
+    """
+    newN = ( 2 * len( hTable.table ) ) + 1
+    print( "New capacity: " + str( newN ) )
+    newTable = HashTable( newN )
+    for i in range( len( hTable.table ) ):
+        for item in hTable.table[ i ]:
+            index = hash_function( item.key, newN )
+            newTable.table[ index ] = [ HashTable._Entry( item.key, item.value ) ]
+    hTable = newTable
