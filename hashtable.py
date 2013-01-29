@@ -94,7 +94,13 @@ def put( hTable, key, value ):
     ratio = load( hTable )
     #print( ratio )
     if ratio >= .75:
-        newTable = rehash( hTable )
+        newN = ( ( 2 * len( hTable.table ) ) + 1 )
+        print( "New capacity: " + str( newN ) )
+        newTable = HashTable( newN )
+        for i in range( len( hTable.table ) ):
+            for item in hTable.table[ i ]:
+                index = hash_function( item.key, newN )
+                newTable.table[ index ] = [ HashTable._Entry( item.key, item.value ) ]
         hTable.table = copy.deepcopy( newTable.table )
         hTable.size = newTable.size
     newN = len( hTable.table )
@@ -156,13 +162,7 @@ def rehash( hTable ):
     """
         Performs a rehash every time the table starts to fill up.
     """
-    newN = ( ( 2 * len( hTable.table ) ) + 1 )
-    #print( "New capacity: " + str( newN ) )
-    newTable = HashTable( newN )
-    for i in range( len( hTable.table ) ):
-        for item in hTable.table[ i ]:
-            index = hash_function( item.key, newN )
-            newTable.table[ index ] = [ HashTable._Entry( item.key, item.value ) ]
+    
     return newTable
     #hTable = HashTable( newN )
     #for n in range( len( newTable.table ) ):
