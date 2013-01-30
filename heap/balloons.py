@@ -27,12 +27,33 @@ class Balloon( object ):
         """
         return ( str( self.name ) + " at " + self.x + ", " + self.y + ", " + self.z )
 
+class BalloonPair( object ):
+    """
+        Pair of balloon objects that includes their distance
+    """
+    __slots__ = ( 'first', 'second', 'dist' )
+    
+    def __init__( self, 'first', 'second' ):
+        """
+        
+        """
+        self.first = first
+        self.second = second
+        dx = first.x - second.x
+        dy = first.y - second.y
+        dz = first.z - second.z
+        sum = ( dx * dx ) + ( dy * dy ) + ( dz * dz )
+        self.dist = math.sqrt( sum )
+
 def main():
     f = open( input( "What is the file containing balloons? " ) )
     size = f[ 0 ]
     lst = [ ]
     for n in range( 1, len( f ) ):
         lst.append( Balloon( f[ n ][ 0 ], f[ n ][ 1 ], f[ n ][ 2 ], f[ n ][ 3 ] ) )
-    
+    allPairs = [ ]
+    for i in range( len( lst ) ):
+        for n in range( i + 1, len( lst ) ):
+            allPairs.append( BalloonPair( lst[ i ], lst[ n ] ) )
 
 main()
