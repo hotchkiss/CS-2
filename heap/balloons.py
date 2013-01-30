@@ -76,8 +76,15 @@ def main():
     for i in range( len( lst ) ):
         for n in range( i + 1, len( lst ) ):
             allPairs.append( BalloonPair( lst[ i ], lst[ n ] ) )
-    balloonHeap = Heap( size, < )
+    myHeap = BalloonHeap( size, < )
     for item in allPairs:
-        add( balloonHeap, item )
-    
+        add( myHeap, item )
+    while len( myHeap.array ) > 1:
+        if myHeap.array[ index ].first not in myHeap.popped and myHeap.array[ index ].second not in myHeap.popped:
+            nextPop = removeMin( myHeap )
+            myHeap.popped.add( nextPop.first )
+            myHeap.popped.add( nextPop.second )
+        else:
+            removeMin( myHeap )
+
 main()
