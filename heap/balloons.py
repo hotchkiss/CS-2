@@ -44,6 +44,12 @@ class BalloonPair( object ):
         dz = first.z - second.z
         sum = ( dx * dx ) + ( dy * dy ) + ( dz * dz )
         self.dist = math.sqrt( sum )
+    
+    def __str__( self ):
+        """
+            Returns pair represented as a string
+        """
+        return( "First balloon: " + self.first.name + "\; Second balloon: " + self.second.name + "\; Distance: " + str( self.dist ) )
 
 def main():
     f = open( input( "What is the file containing balloons? " ) )
