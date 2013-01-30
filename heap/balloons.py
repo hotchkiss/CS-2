@@ -51,15 +51,33 @@ class BalloonPair( object ):
         """
         return( "First balloon: " + self.first.name + "\; Second balloon: " + self.second.name + "\; Distance: " + str( self.dist ) )
 
+class BalloonHeap( Heap ):
+    """
+    
+    """
+    __slots__ = ( 'popped' )
+    
+    def __init__( self ):
+        self.super()
+        self.popped = { }
+    
+    def __str__( self ):
+        pass
+
 def main():
     f = open( input( "What is the file containing balloons? " ) )
     size = f[ 0 ]
     lst = [ ]
+    size = len( lst )
+    size *= size
     for n in range( 1, len( f ) ):
         lst.append( Balloon( f[ n ][ 0 ], f[ n ][ 1 ], f[ n ][ 2 ], f[ n ][ 3 ] ) )
     allPairs = [ ]
     for i in range( len( lst ) ):
         for n in range( i + 1, len( lst ) ):
             allPairs.append( BalloonPair( lst[ i ], lst[ n ] ) )
-
+    balloonHeap = Heap( size, < )
+    for item in allPairs:
+        add( balloonHeap, item )
+    
 main()
