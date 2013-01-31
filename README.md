@@ -1,0 +1,1 @@
+A repository of folders, each of which contains code for a different lab or project completed during CS242 at RIT.
