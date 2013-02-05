@@ -18,7 +18,7 @@ class Balloon( object ):
             Initializes a balloon object
         """
         self.name = color
-        self.x = int( x ) 
+        self.x = int( x )
         self.y = int( y )
         self.z = int( z )
     
@@ -68,17 +68,17 @@ class BalloonHeap( Heap ):
     
     def __init__( self, size ):
         Heap.__init__( self, size, min )
-        self.popped = 
+        self.popped =
     
     def __str__( self ):
         pass
 """
 
 """def compareFunc( a, b ):
-    
+        
         Returns true if a's dist is less than b's
         Preconditions: a and b are both BalloonPair objects
-    
+   
    return a.dist < b.dist
 """
 def dist( a, b ):
@@ -96,26 +96,32 @@ def main():
         lines.append( line )
     size = int( lines[ 0 ][ 0 ] )
     lst = [ ]
+    for n in range( 1, len( lines ) ):
+        lst.append( Balloon( lines[ n ][ 0 ], lines[ n ][ 1 ], lines[ n ][ 2 ], lines[ n ][ 3 ] ) )
     size = len( lst )
     size *= size
-    for n in range( 1, len( lines ) ):
-        print( lines[ n ][ 0 ]  + str( lines[ n ][ 1 ] ) )
-        lst.append( Balloon( lines[ n ][ 0 ], lines[ n ][ 1 ], lines[ n ][ 2 ], lines[ n ][ 3 ] ) )
     allPairs = dict()
     for i in range( len( lst ) ):
         for n in range( i + 1, len( lst ) ):
-            allPairs.[ dist( lst[ i ].dist, lst[ n ].dist ) ] += ( [ lst[ i ], lst[ n ],  )
-    popped = { }
-    myHeap = Heap( size + 1, less )
-    for item in allPairs:
-        add( myHeap, [ item.key, item.value ] )
+            distance = dist( lst[ i ], lst[ n ] )
+            if distance not in allPairs:
+                allPairs[ distance ] = [ ]
+            allPairs[ distance ].append( [ lst[ i ], lst[ n ] ] )
+    popped = set()
+    myHeap = Heap( size, less )
+    for key in allPairs:
+        add( myHeap, key )
     while len( myHeap.array ) > 1:
-        if myHeap.array[ 0 ][ 0 ] not in popped:
-            nextPop = removeMin( myHeap )
-            myHeap.popped.add( nextPop.first )
-            myHeap.popped.add( nextPop.second )
-        else:
-            removeMin( myHeap )
-            siftUp( myHeap, 1)
+        cur = removeMin( myHeap )
+        if cur in allPairs:
+           for item in allPairs[ cur ]:
+               if item[ 0 ] in popped or item[ 1 ] in popped:
+                   ''''''
+                   pass
+               else:
+                   popped.add( item[ 0 ] )
+                   popped.add( item[ 1 ] )
+           allPairs[ cur ] = None
+    
 
 main()
