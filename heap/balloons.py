@@ -11,7 +11,7 @@ class Balloon( object ):
     """
         Balloon object to be stored in a heap
     """
-    __slots__ = ( 'name', 'x', 'y', 'z' )
+    __slots__ = ( 'name', 'x', 'y', 'z', 'popped' )
     
     def __init__( self, color, x, y, z ):
         """
@@ -21,12 +21,18 @@ class Balloon( object ):
         self.x = int( x )
         self.y = int( y )
         self.z = int( z )
+        self.popped = False
     
     def __str__( self ):
         """
             Returns balloon object represented as a string
         """
-        return ( str( self.name ) + " at " + self.x + ", " + self.y + ", " + self.z )
+        this = str( self.name ) + " at " + str( self.x ) + ", " + str( self.y ) + ", " + str( self.z )
+        if self.popped:
+            this += ";\ Balloon is popped"
+        else:
+            this += ";\ Balloon is not popped"
+        return this
 
 class BalloonPair( object ):
     """
@@ -107,21 +113,25 @@ def main():
             if distance not in allPairs:
                 allPairs[ distance ] = [ ]
             allPairs[ distance ].append( [ lst[ i ], lst[ n ] ] )
-    popped = set()
-    myHeap = Heap( size, less )
+    print( len( allPairs ) )
+    myHeap = Heap( len( allPairs ) // 2 + 2, less )
     for key in allPairs:
+        print( key )
         add( myHeap, key )
     while len( myHeap.array ) > 1:
+        #print( len( myHeap.array ) )
         cur = removeMin( myHeap )
         if cur in allPairs:
-           for item in allPairs[ cur ]:
-               if item[ 0 ] in popped or item[ 1 ] in popped:
-                   ''''''
-                   pass
-               else:
-                   popped.add( item[ 0 ] )
-                   popped.add( item[ 1 ] )
-           allPairs[ cur ] = None
-    
-
+            for item in allPairs[ cur ]:
+                if item[ 0 ].popped or item[ 1 ].popped:
+                    ''''''
+                    pass
+                else:
+                    print( item[ 0 ].name + ", " + item[ 1 ].name) 
+                    item[ 0 ].popped = True
+                    item[ 1 ].popped = True
+                allPairs[ cur ] = None
+    for balloon in lst:
+        if not balloon.popped:
+            print( str( balloon ) )
 main()
