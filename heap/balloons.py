@@ -29,65 +29,15 @@ class Balloon( object ):
         """
         this = str( self.name ) + " at " + str( self.x ) + ", " + str( self.y ) + ", " + str( self.z )
         if self.popped:
-            this += ";\ Balloon is popped"
+            this += "; Balloon is popped"
         else:
-            this += ";\ Balloon is not popped"
+            this += "; Balloon is not popped"
         return this
 
-class BalloonPair( object ):
-    """
-        Pair of balloon objects that includes their distance
-    """
-    __slots__ = ( 'first', 'second', 'dist' )
-    
-    def __init__( self, first, second ):
-        """
-        
-        """
-        self.first = first
-        self.second = second
-        dx = first.x - second.x
-        dy = first.y - second.y
-        dz = first.z - second.z
-        sum = ( dx * dx ) + ( dy * dy ) + ( dz * dz )
-        self.dist = math.sqrt( sum )
-    
-    def __str__( self ):
-        """
-            Returns pair represented as a string
-        """
-        return( "First balloon: " + self.first.name + "\; Second balloon: " + self.second.name + "\; Distance: " + str( self.dist ) )
-    
-    def cmp( self, other ):
-        """
-            Compares distance values and returns true if its distance is less than other's distance
-        """
-        if self.dist < other.dist:
-            return -1
-        elif self.dist > other.dist:
-            return 1
-        else: return 0
-
-"""
-class BalloonHeap( Heap ):
-    __slots__ = ( 'popped' )
-    
-    def __init__( self, size ):
-        Heap.__init__( self, size, min )
-        self.popped =
-    
-    def __str__( self ):
-        pass
-"""
-
-"""def compareFunc( a, b ):
-        
-        Returns true if a's dist is less than b's
-        Preconditions: a and b are both BalloonPair objects
-   
-   return a.dist < b.dist
-"""
 def dist( a, b ):
+    """
+        Computes distance between balloon a and b
+    """
     x = a.x - b.x
     y = a.y - b.y
     z = a.z - b.z
@@ -95,6 +45,9 @@ def dist( a, b ):
     return math.sqrt( sum )
 
 def main():
+    """
+        Takes a file full of balloon names and locations and prints the name of the balloon that is not popped, if any.
+    """
     f = open( input( "What is the file containing balloons? " ) )
     lines = [ ]
     for line in f:
@@ -104,34 +57,36 @@ def main():
     lst = [ ]
     for n in range( 1, len( lines ) ):
         lst.append( Balloon( lines[ n ][ 0 ], lines[ n ][ 1 ], lines[ n ][ 2 ], lines[ n ][ 3 ] ) )
-    size = len( lst )
-    size *= size
     allPairs = dict()
     for i in range( len( lst ) ):
         for n in range( i + 1, len( lst ) ):
             distance = dist( lst[ i ], lst[ n ] )
             if distance not in allPairs:
-                allPairs[ distance ] = [ ]
-            allPairs[ distance ].append( [ lst[ i ], lst[ n ] ] )
-    print( len( allPairs ) )
-    myHeap = Heap( len( allPairs ) // 2 + 2, less )
+                allPairs[ distance ] = set()
+            allPairs[ distance ].add( lst[ i ] )
+            allPairs[ distance ].add( lst[ n ] )
+    myHeap = Heap( size, less )
     for key in allPairs:
-        print( key )
         add( myHeap, key )
-    while len( myHeap.array ) > 1:
-        #print( len( myHeap.array ) )
+    while myHeap.size > 1:
         cur = removeMin( myHeap )
         if cur in allPairs:
+            notPopped = 0
             for item in allPairs[ cur ]:
-                if item[ 0 ].popped or item[ 1 ].popped:
-                    ''''''
-                    pass
-                else:
-                    print( item[ 0 ].name + ", " + item[ 1 ].name) 
-                    item[ 0 ].popped = True
-                    item[ 1 ].popped = True
-                allPairs[ cur ] = None
+                if not item.popped:
+                    notPopped += 1
+            if notPopped > 1:
+                '''beingPopped = "" '''
+                for balloon in allPairs[ cur ]:
+                    if not balloon.popped:
+                        balloon.popped = True
+            allPairs[ cur ] = [ ]
+    nonePopped = True
     for balloon in lst:
         if not balloon.popped:
+            nonePopped = False
             print( str( balloon ) )
+    if nonePopped == True:
+        print( "No balloons left unpopped." )
+
 main()
